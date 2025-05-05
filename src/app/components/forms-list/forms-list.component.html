@@ -34,14 +34,14 @@
     }
   </div>
 
-  <div formArrayName="forms" class="grid grid-cols-4 gap-4">
+  <div formArrayName="forms" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     @for (ctrl of forms.controls; let i = $index; track ctrl) {
-      <div class="relative w-max">
+      <div class="relative p-2">
         <app-form-card [formControl]="$any(ctrl)" [index]="i"></app-form-card>
         <button
           [disabled]="isSubmitting()"
           (click)="removeForm(i)"
-          class="px-4 py-2 rounded absolute top-4 right-4 text-sm text-white bg-red-600 disabled:opacity-50"
+          class="absolute top-4 right-4 px-3 py-1 text-sm rounded text-white bg-red-600 disabled:opacity-50"
           type="button"
         >
           Remove

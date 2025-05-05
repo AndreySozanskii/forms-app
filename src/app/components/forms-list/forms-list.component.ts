@@ -30,7 +30,6 @@ import { map } from 'rxjs/operators';
 import { FormSubmitService } from '@services/http';
 
 @Component({
-  standalone: true,
   selector: 'app-forms-list',
   imports: [ReactiveFormsModule, FormCardComponent, AsyncPipe],
   providers: [FormSubmitService],

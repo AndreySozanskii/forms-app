@@ -26,7 +26,6 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  standalone: true,
   selector: 'app-form-card',
   templateUrl: './form-card.component.html',
   imports: [ReactiveFormsModule, ValidationMessageDirective],
