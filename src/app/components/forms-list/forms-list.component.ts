@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
   signal,
@@ -17,7 +16,7 @@ import { FormCardComponent } from './form-card/form-card.component';
 import {
   interval,
   Observable,
-  startWith,
+  startWith, Subscription,
   take,
   takeUntil,
   takeWhile,
@@ -38,7 +37,6 @@ import { BaseComponent } from '@shared/base';
 export class FormsListComponent extends BaseComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private formSubmitService: FormSubmitService = inject(FormSubmitService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   public formGroup = this.formBuilder.group({
     forms: this.formBuilder.array([]),
@@ -46,6 +44,8 @@ export class FormsListComponent extends BaseComponent {
 
   public timer: WritableSignal<number> = signal(5);
   public isSubmitting: WritableSignal<boolean> = signal(false);
+
+  private intervalSubscription!: Subscription;
 
   get forms(): FormArray {
     return this.formGroup.get('forms') as FormArray;
@@ -87,7 +87,7 @@ export class FormsListComponent extends BaseComponent {
   }
 
   public cancelSubmit(): void {
-    this.unsubscribe();
+    this.intervalSubscription.unsubscribe();
     this.isSubmitting.set(false);
     this.enableForms();
   }
@@ -95,9 +95,8 @@ export class FormsListComponent extends BaseComponent {
   private startTimer(): void {
     this.timer.set(5);
 
-    interval(1000)
+    this.intervalSubscription = interval(1000)
       .pipe(
-        takeUntil(this.ngUnsubscribe$),
         takeWhile(() => this.timer() > 0),
         tap(() => {
           const current = this.timer();
@@ -126,8 +125,8 @@ export class FormsListComponent extends BaseComponent {
   }
 
   private resetFormGroup(): void {
-    this.formGroup = this.formBuilder.group({
-      forms: this.formBuilder.array([]),
+    this.formGroup.setValue({
+      forms: [],
     });
   }
 
@@ -135,14 +134,14 @@ export class FormsListComponent extends BaseComponent {
     this.isSubmitting.set(false);
     const payload = this.forms.value;
 
+    this.intervalSubscription.unsubscribe();
+    this.unsubscribe();
+
     this.formSubmitService
       .submitForm(payload)
       .pipe(take(1))
       .subscribe(() => {
         this.resetFormGroup();
-        this.cdr.markForCheck();
       });
-
-    this.unsubscribe();
   }
 }
