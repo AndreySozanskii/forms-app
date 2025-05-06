@@ -4,7 +4,6 @@ import {
   forwardRef,
   inject,
   Input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import {
@@ -22,8 +21,9 @@ import {
 import { CountryEnum } from '@shared/enum';
 import { ValidationMessageDirective } from '@shared/directives';
 import { UsernameValidationService } from '@services/validators';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { BaseComponent } from '@shared/base';
 
 @Component({
   selector: 'app-form-card',
@@ -40,7 +40,8 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormCardComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  extends BaseComponent
+  implements ControlValueAccessor, OnInit
 {
   private fb = inject(FormBuilder);
   private usernameService = inject(UsernameValidationService);
@@ -50,8 +51,6 @@ export class FormCardComponent
   public form!: FormGroup;
   public countryEnum = Object.values(CountryEnum);
   public isDisabled = false;
-
-  private ngUnsubscribe$ = new Subject<void>();
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
@@ -114,10 +113,5 @@ export class FormCardComponent
   public dateValidator(control: FormControl): { futureDate: true } | null {
     const inputDate = new Date(control.value);
     return inputDate <= new Date() ? null : { futureDate: true };
-  }
-
-  public ngOnDestroy(): void {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
   }
 }

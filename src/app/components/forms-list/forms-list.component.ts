@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  OnDestroy,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -19,7 +18,6 @@ import {
   interval,
   Observable,
   startWith,
-  Subject,
   take,
   takeUntil,
   takeWhile,
@@ -28,6 +26,7 @@ import {
 import { FormDataModel } from '@models/form-data.model';
 import { map } from 'rxjs/operators';
 import { FormSubmitService } from '@services/http';
+import { BaseComponent } from '@shared/base';
 
 @Component({
   selector: 'app-forms-list',
@@ -36,7 +35,7 @@ import { FormSubmitService } from '@services/http';
   templateUrl: './forms-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormsListComponent implements OnDestroy {
+export class FormsListComponent extends BaseComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private formSubmitService: FormSubmitService = inject(FormSubmitService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
@@ -47,8 +46,6 @@ export class FormsListComponent implements OnDestroy {
 
   public timer: WritableSignal<number> = signal(5);
   public isSubmitting: WritableSignal<boolean> = signal(false);
-
-  private ngUnsubscribe$ = new Subject<void>();
 
   get forms(): FormArray {
     return this.formGroup.get('forms') as FormArray;
@@ -89,7 +86,7 @@ export class FormsListComponent implements OnDestroy {
   }
 
   public cancelSubmit(): void {
-    this.ngUnsubscribe$.next();
+    this.unsubscribe();
     this.isSubmitting.set(false);
     this.enableForms();
   }
@@ -145,11 +142,6 @@ export class FormsListComponent implements OnDestroy {
         this.cdr.markForCheck();
       });
 
-    this.ngUnsubscribe$.next();
-  }
-
-  public ngOnDestroy(): void {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
+    this.unsubscribe();
   }
 }

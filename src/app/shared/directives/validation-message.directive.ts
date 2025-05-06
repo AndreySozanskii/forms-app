@@ -3,24 +3,25 @@ import {
   ElementRef,
   inject,
   Input,
-  OnDestroy,
   OnInit,
   Renderer2,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { BaseComponent } from '@shared/base';
 
 @Directive({
   selector: '[appValidationMessage]',
 })
-export class ValidationMessageDirective implements OnInit, OnDestroy {
+export class ValidationMessageDirective
+  extends BaseComponent
+  implements OnInit
+{
   private el = inject(ElementRef);
   private control = inject(NgControl);
   private renderer = inject(Renderer2);
 
   @Input('appValidationMessage') public fieldName: string = '';
-
-  private ngUnsubscribe$ = new Subject<void>();
 
   public ngOnInit(): void {
     const parent = this.el.nativeElement.parentElement;
@@ -91,10 +92,5 @@ export class ValidationMessageDirective implements OnInit, OnDestroy {
       default:
         return `Invalid ${this.fieldName}.`;
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
   }
 }
