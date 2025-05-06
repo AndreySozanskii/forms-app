@@ -56,6 +56,7 @@ export class FormsListComponent extends BaseComponent {
       startWith(this.formGroup.value),
       takeUntil(this.ngUnsubscribe$),
       map(() => {
+        console.log('invalidFormsCount$');
         return this.forms.controls.filter(
           (ctrl) =>
             (ctrl?.value?.includes && ctrl?.value?.includes?.('INVALID')) ||
