@@ -59,6 +59,7 @@ export class FormsListComponent extends BaseComponent {
         return this.forms.controls.filter(
           (ctrl) =>
             (ctrl?.value?.includes && ctrl?.value?.includes?.('INVALID')) ||
+            (ctrl?.value?.includes && ctrl?.value?.includes?.('PENDING')) ||
             ctrl.pristine,
         ).length;
       }),
@@ -124,9 +125,7 @@ export class FormsListComponent extends BaseComponent {
   }
 
   private resetFormGroup(): void {
-    this.formGroup.setValue({
-      forms: [],
-    });
+    this.forms.clear();
   }
 
   private finalSubmit(): void {
