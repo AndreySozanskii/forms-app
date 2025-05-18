@@ -84,7 +84,6 @@ export class FormCardComponent
 
   public writeValue(value: any): void {
     if (value) {
-      console.log(value);
       this.form.patchValue(value, { emitEvent: false });
     }
   }
