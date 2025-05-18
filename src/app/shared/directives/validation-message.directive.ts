@@ -88,7 +88,7 @@ export class ValidationMessageDirective
       case 'futureDate':
         return `Date cannot be in the future.`;
       case 'usernameTaken':
-        return `Username is already taken.`;
+        return `Username is already taken. Use with prefix "new"`;
       default:
         return `Invalid ${this.fieldName}.`;
     }
