@@ -1,0 +1,52 @@
+<div [formGroup]="formGroup" class="space-y-4">
+  <div class="flex items-center gap-4">
+    <button
+      [disabled]="forms.length >= 10 || isSubmitting()"
+      (click)="addForm()"
+      class="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+      type="button"
+    >
+      Add Form
+    </button>
+
+    @if (isSubmitting()) {
+      <div class="flex items-center gap-2">
+        <button
+          (click)="cancelSubmit()"
+          class="px-4 py-2 bg-red-500 text-white rounded"
+          type="button"
+        >
+          Cancel
+        </button>
+        <span class="text-gray-700">Submitting in {{ timer() }}s</span>
+      </div>
+    } @else {
+      @if (forms.length) {
+        <button
+          [disabled]="!!(invalidFormsCount$ | async)"
+          (click)="submitAll()"
+          class="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+          type="submit"
+        >
+          Submit all forms ({{ (invalidFormsCount$ | async)}})
+        </button>
+      }
+    }
+  </div>
+
+  <div formArrayName="forms" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @for (ctrl of forms.controls; let i = $index; track ctrl) {
+      <div class="relative p-2">
+        <app-form-card [formControl]="$any(ctrl)" [index]="i"></app-form-card>
+        <button
+          [disabled]="isSubmitting()"
+          (click)="removeForm(i)"
+          class="absolute top-4 right-6 px-3 py-1 text-sm rounded text-white bg-red-600 disabled:opacity-50"
+          type="button"
+        >
+          Remove
+        </button>
+      </div>
+    }
+  </div>
+</div>

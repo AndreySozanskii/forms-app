@@ -1,0 +1,34 @@
+<div [formGroup]="form" class="space-y-4 p-4 rounded-xl shadow md:space-y-0 md:flex md:flex-wrap md:gap-6">
+  <div class="form-group md:flex-1 min-w-[185px] mt-5">
+    <label class="block text-sm font-medium text-gray-700">Country</label>
+    <input
+      type="text"
+      formControlName="country"
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-10 px-2"
+      placeholder="Enter country"
+      appValidationMessage="Country"
+    >
+  </div>
+
+  <div class="form-group md:flex-1 min-w-[185px]">
+    <label class="block text-sm font-medium text-gray-700">Username</label>
+    <input
+      type="text"
+      formControlName="username"
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-10 px-2"
+      placeholder="Enter username"
+      appValidationMessage="Username"
+    >
+  </div>
+
+  <div class="form-group md:flex-1 min-w-[185px]">
+    <label class="block text-sm font-medium text-gray-700">Birthday</label>
+    <input
+      type="date"
+      formControlName="birthday"
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-10 px-2"
+      appValidationMessage="Birthday"
+    >
+  </div>
+</div>
+
